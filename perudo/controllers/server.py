@@ -1,12 +1,14 @@
 from uuid import uuid4
 
-from fastapi import FastAPI, Response, status
+from controllers.game_subscriber import GameSubscriberManager
+from fastapi import FastAPI, Response, WebSocket, status
 from game.dice import DiceOptions
 from game.game import Game, GameData
 from game.guess import Guess
 from player.player import Player, PlayerStatus
 
 app =  FastAPI()
+websockets_manager = GameSubscriberManager()
 games: list[Game] = []
 player_ids: list[int] = []
 
@@ -85,9 +87,15 @@ def get_dice(player_id: int) -> list[int]:
 def get_games() -> list[GameData]:
     return [GameData(game_id=game.game_id, players_ids=game.players_ids) for game in games]
 
+
 @app.get("/get_current_player_id")
 def get_current_player_id(game_id: str) -> int:
     return find_game_by_id(game_id).current_player.id
+
+
+@app.websocket("/subscribe_to_game")
+async def subscribe_to_game(websocket: WebSocket, game_id: str) -> None:
+    websockets_manager.add_to_game(websocket, game_id)
 
 def find_game_by_id(game_id: str) -> Game:
     for game in games:

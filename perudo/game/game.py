@@ -29,8 +29,13 @@ class Game:
     @property
     def status(self) -> list[PlayerStatus]:
         return [
-            PlayerStatus(player_id=player.player_id, dices_left=player.dices_left) for player in self.players
-            ]
+            PlayerStatus(
+                player_id=player.player_id,
+                dices_left=player.dices_left,
+                name=player.name,
+                )
+                for player in self.players
+        ]
 
     @property
     def players_ids(self) -> list[int]:

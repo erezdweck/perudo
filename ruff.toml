@@ -64,7 +64,7 @@ select = [
     "PERF",
     "RUF",
      ]
-ignore = ["ANN101", "ANN102"]
+ignore = ["ANN101", "ANN102", "ANN204"]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]

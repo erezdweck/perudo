@@ -10,12 +10,14 @@ NUMBER_OF_OPTIONS = 6
 
 
 class PlayerStatus(BaseModel):
+    name: str
     player_id: int
     dices_left: int
 
 
 class Player:
-    def __init__(self, player_id: int) -> None:
+    def __init__(self, player_id: int, name: str) -> None:
+        self.name = name
         self.dices_left = 5
         self._dices: list[DiceOptions] = None
         self.id = player_id
