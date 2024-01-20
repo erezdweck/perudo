@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "perudo"
+version = "0.1.0"
+description = ""
+authors = ["Erez Dweck <erezdweck@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+ruff = "^0.1.11"
+fastapi = {extras = ["all"], version = "^0.108.0"}
+
+
+[tool.poetry.group.dev.dependencies]
+ipdb = "^0.13.13"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
