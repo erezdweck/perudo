@@ -1,9 +1,10 @@
 import dataclasses
 
-from game.dice import DiceOptions
-from game.guess import Guess
-from player.player import Player, PlayerStatus
 from pydantic import BaseModel
+
+from perudo.game.dice import DiceOptions
+from perudo.game.guess import Guess
+from perudo.player.player import Player, PlayerStatus
 
 
 class GameData(BaseModel):
@@ -30,7 +31,7 @@ class Game:
     def status(self) -> list[PlayerStatus]:
         return [
             PlayerStatus(
-                player_id=player.player_id,
+                player_id=player.id,
                 dices_left=player.dices_left,
                 name=player.name,
                 )

@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
 from fastapi import WebSocket
-from player.player import PlayerStatus
+
+from perudo.player.player import PlayerStatus
 
 
 @dataclass
@@ -22,9 +23,7 @@ class GameSubscriberManager:
 
     async def connect(self, websocket: WebSocket, game_id: str) -> None:
         await websocket.accept()
-        if game_id in self.game_ids:
-            self.add_to_game(websocket, game_id)
-        self.active_connections.append(websocket)
+        self.add_to_game(websocket, game_id)
 
     def disconnect(self, subscriber: WebSocket) -> None:
         for game in self.games:

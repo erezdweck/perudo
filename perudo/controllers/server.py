@@ -1,24 +1,26 @@
 from uuid import uuid4
 
-from controllers.game_subscriber import GameSubscriberManager
 from fastapi import FastAPI, Response, WebSocket, status
-from game.dice import DiceOptions
-from game.game import Game, GameData
-from game.guess import Guess
-from player.player import Player, PlayerStatus
 
-app =  FastAPI()
+from perudo.controllers.game_subscriber import GameSubscriberManager
+from perudo.game.dice import DiceOptions
+from perudo.game.game import Game, GameData
+from perudo.game.guess import Guess
+from perudo.player.player import Player, PlayerStatus
+
+app = FastAPI()
 websockets_manager = GameSubscriberManager()
 games: list[Game] = []
 player_ids: list[int] = []
 
+
 @app.post("/take_guess")
 def take_guess(
-    player_id: int,
-    dice_value: int,
-    number_of_hits: int,
-    response: Response,
-    ) -> None:
+        player_id: int,
+        dice_value: int,
+        number_of_hits: int,
+        response: Response,
+) -> None:
     game = find_game_by_player_id(player_id)
     if player_id != game.current_player.id:
         response.status_code = status.HTTP_401_UNAUTHORIZED
@@ -37,6 +39,7 @@ def take_guess(
     else:
         response.status_code = status.HTTP_406_NOT_ACCEPTABLE
 
+
 @app.post("/lie")
 def lie(player_id: int, response: Response) -> list[PlayerStatus] | str:
     game = find_game_by_player_id(player_id)
@@ -54,7 +57,7 @@ def create_new_game(player_id: int, response: Response) -> str:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return f"player id {player_id} already in use."
 
-    new_player = Player(player_id)
+    new_player = Player(name="", player_id=player_id)
     player_ids.append(player_id)
     new_game = Game(game_id=str(uuid4()))
     new_game.players.append(new_player)
@@ -68,10 +71,11 @@ def join_game(game_id: str, player_id: int, response: Response) -> None:
     game = find_game_by_id(game_id)
     if player_id not in player_ids:
         player_ids.append(player_id)
-        game.players.append(Player(player_id))
+        game.players.append(Player(name="", player_id=player_id))
 
     else:
         response.status_code = status.HTTP_400_BAD_REQUEST
+
 
 @app.post("/roll_dices")
 def roll_dices(game_id: str) -> None:
@@ -96,6 +100,7 @@ def get_current_player_id(game_id: str) -> int:
 @app.websocket("/subscribe_to_game")
 async def subscribe_to_game(websocket: WebSocket, game_id: str) -> None:
     websockets_manager.add_to_game(websocket, game_id)
+
 
 def find_game_by_id(game_id: str) -> Game:
     for game in games:

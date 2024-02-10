@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from game.dice import DiceOptions
-from system.consts import DOUBLE
+from perudo.game.dice import DiceOptions
+from perudo.system.consts import DOUBLE
 
 
 @dataclass
@@ -20,8 +20,7 @@ class Guess:
         if self.number_of_hits > last_guess.number_of_hits:
             return True
 
-        if self.number_of_hits == last_guess.number_of_hits and\
-              self.dice.dice_value > last_guess.dice.dice_value:
+        if self.number_of_hits == last_guess.number_of_hits and self.dice > last_guess.dice:
             return True
 
         return False
